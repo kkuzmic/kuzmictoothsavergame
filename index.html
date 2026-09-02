@@ -250,6 +250,18 @@ function update(dt){
 }
 function popText(x,y,t){particles.push({x,y,vx:0,vy:-55,life:1.0,text:t,textLife:true,good:t[0]==="+"})}
 
+function legend(label,pts,color,y){
+  ctx.save();
+  const x=W-178;
+  ctx.fillStyle=color;
+  ctx.beginPath();
+  ctx.arc(X(x),Y(y),S(8),0,Math.PI*2);
+  ctx.fill();
+  text(label,x+18,y,15,"#fff","800","left");
+  text((pts>0?"+":"")+pts,x+140,y,15,color,"900","right");
+  ctx.restore();
+}
+
 function hud(){
   panel(18,18,205,125);text("SCORE",120,43,25);text(String(score),120,82,54);
   text("BEST: "+best,120,114,18,"#ffd42a","800");
