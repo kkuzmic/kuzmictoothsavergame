@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tooth Saver">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <title>Kuzmic Orthodontics — Tooth Saver</title>
@@ -22,6 +23,16 @@ canvas{width:100%;height:100%;display:block;touch-action:none}
 @media (orientation:portrait) and (max-width:900px){
   #rotate{display:flex}
 }
+
+#installHelp{display:none;position:absolute;inset:0;z-index:40;align-items:center;justify-content:center;background:rgba(1,13,45,.78);padding:20px;font-family:Arial,sans-serif}
+#installHelp.show{display:flex}
+.installCard{width:min(420px,92vw);background:#08245f;border:2px solid #39cfff;border-radius:20px;box-shadow:0 12px 45px rgba(0,0,0,.45);padding:22px;text-align:center;color:#fff}
+.installTitle{font-size:22px;font-weight:800;margin-bottom:12px}
+.installText{font-size:15px;line-height:1.4;margin-bottom:14px;color:#dffbff}
+.installSteps{font-size:15px;line-height:1.55;text-align:left;background:rgba(0,0,0,.18);border-radius:12px;padding:14px;margin-bottom:16px}
+.installSteps b{color:#fff}
+#installClose{border:0;background:#0d5dcc;color:#fff;border:2px solid #7be8ff;border-radius:12px;padding:10px 20px;font-weight:800;font-size:14px}
+@media (min-width:701px){#installHelp{display:none!important}}
 </style>
 </head>
 <body>
@@ -29,6 +40,14 @@ canvas{width:100%;height:100%;display:block;touch-action:none}
 <canvas id="game"></canvas>
 <div id="rotate">For the best Tooth Saver experience, turn your phone sideways. 🦷</div>
 <button id="mobileFS" aria-label="Enter full screen">FULL SCREEN</button>
+<div id="installHelp" aria-hidden="true">
+  <div class="installCard">
+    <div class="installTitle">📱 PLAY FULL SCREEN</div>
+    <div class="installText" id="installText">For the best phone experience, add Tooth Saver to your Home Screen.</div>
+    <div class="installSteps" id="installSteps"></div>
+    <button id="installClose">GOT IT</button>
+  </div>
+</div>
 </div>
 
 
@@ -387,6 +406,27 @@ mobileFS.addEventListener("click",async()=>{
 });
 addEventListener("fullscreenchange",resize);
 addEventListener("webkitfullscreenchange",resize);
+
+// On phones, explain how to launch the Home Screen version. iOS does not allow a normal link to force standalone mode.
+const installHelp=document.getElementById("installHelp");
+const installText=document.getElementById("installText");
+const installSteps=document.getElementById("installSteps");
+const installClose=document.getElementById("installClose");
+const isStandalone=window.matchMedia?.("(display-mode: standalone)").matches || window.navigator.standalone===true;
+const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+const isMobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+if(isMobile && !isStandalone && !sessionStorage.getItem("toothSaverInstallHelpShown")){
+  if(isIOS){
+    installText.textContent="Add Tooth Saver to your Home Screen once, then launch it from the new icon for the full-screen game view.";
+    installSteps.innerHTML='<b>On iPhone:</b><br>1. Tap the <b>Share</b> button in Safari.<br>2. Choose <b>Add to Home Screen</b>.<br>3. Tap <b>Add</b>.<br>4. Open Tooth Saver from your Home Screen.';
+  }else{
+    installText.textContent="Install Tooth Saver to your Home Screen for the app-style full-screen game view.";
+    installSteps.innerHTML='<b>On Android:</b><br>Use your browser menu and choose <b>Add to Home screen</b> or <b>Install app</b>, then launch Tooth Saver from the new icon.';
+  }
+  installHelp.classList.add("show");
+  installHelp.setAttribute("aria-hidden","false");
+}
+installClose.addEventListener("click",()=>{sessionStorage.setItem("toothSaverInstallHelpShown","1");installHelp.classList.remove("show");installHelp.setAttribute("aria-hidden","true");});
 loop(performance.now());
 </script>
 </body>
