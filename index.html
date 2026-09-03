@@ -15,7 +15,7 @@ body{display:flex;align-items:center;justify-content:center;overscroll-behavior:
 canvas{width:100%;height:100%;display:block;touch-action:none}
 #mobileFS{display:none;position:absolute;right:12px;top:12px;z-index:30;border:1px solid rgba(150,235,255,.75);background:rgba(4,31,86,.82);color:#fff;border-radius:10px;padding:8px 11px;font:700 12px Arial;letter-spacing:.4px}#rotate{display:none;position:absolute;inset:0;background:#061a49;color:#fff;z-index:20;align-items:center;justify-content:center;text-align:center;padding:30px;font-size:22px;font-weight:700}
 @media (orientation:landscape) and (max-width:900px){
-  #wrap{width:min(100vw,152.78vh);height:min(100vh,65.45vw);aspect-ratio:1100/720}
+  #wrap{width:min(84vw,128.33vh);height:min(84vh,54.55vw);aspect-ratio:1100/720}
   canvas{width:100%;height:100%;object-fit:contain}
   #mobileFS{display:block}
 }
@@ -52,8 +52,8 @@ logo.src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABhsAAALaCAYAAAAoSuIuAAAA
 function resize(){
   const mobileLandscape=window.matchMedia("(orientation: landscape) and (max-width: 900px)").matches;
   if(mobileLandscape){
-    // Keep the game's original 1100x720 design space on phones so every HUD
-    // element remains visible instead of being cropped by a narrow viewport.
+    // Keep the game's original 1100x720 design space; CSS scales the whole game
+    // down on mobile so every HUD element remains comfortably visible.
     W=1100; H=720;
     const r=canvas.getBoundingClientRect();
     dpr=Math.min(devicePixelRatio||1,2);
